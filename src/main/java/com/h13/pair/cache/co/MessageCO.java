@@ -53,4 +53,15 @@ public class MessageCO {
     public void setContent(String content) {
         this.content = content;
     }
+
+    @Override
+    public String toString() {
+        return "MessageCO{" +
+                "msgId='" + msgId + '\'' +
+                ", fromId='" + fromId + '\'' +
+                ", toId='" + toId + '\'' +
+                ", content='" + content + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }

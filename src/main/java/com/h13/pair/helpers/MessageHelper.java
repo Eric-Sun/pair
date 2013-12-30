@@ -5,6 +5,8 @@ import com.h13.pair.cache.co.PairCO;
 import com.h13.pair.cache.service.MessageCache;
 import com.h13.pair.cache.service.PairCache;
 import com.h13.pair.exceptions.IsNotPairException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,37 +21,26 @@ import java.util.List;
  */
 @Service
 public class MessageHelper {
-
-    @Autowired
-    PairCache pairCache;
+    private static Logger LOG = LoggerFactory.getLogger(MessageHelper.class);
 
     @Autowired
     MessageCache messageCache;
 
+    @Autowired
+    SessionHelper sessionHelper;
+
     public void send(String fromId, String toId, String content) throws IsNotPairException {
-        boolean isPair = isPair(fromId, toId);
+        boolean isPair = sessionHelper.isPair(fromId, toId);
         if (!isPair)
-            throw new IsNotPairException("fromId = " + fromId + " toId = " + toId);
+            throw new IsNotPairException("sessionId = " + fromId + " toSessionId = " + toId);
 
         MessageCO msg = newMessage(fromId, toId, content);
         messageCache.put(msg);
+        LOG.info("send message. sessionId=" + fromId + " toSessionId=" + toId);
+        if (LOG.isDebugEnabled())
+            LOG.debug("send message. sessionId=" + fromId + " toSessionId=" + toId + " message=" + content);
     }
 
-
-    /**
-     * 检测是否已经成为一对了
-     *
-     * @param fromId
-     * @param toId
-     * @return
-     */
-    public boolean isPair(String fromId, String toId) {
-        PairCO pair = pairCache.get(fromId, toId);
-        if (pair != null)
-            return true;
-        return false;
-
-    }
 
     private MessageCO newMessage(String fromId, String toId, String content) {
         MessageCO msg = new MessageCO();
@@ -67,10 +58,20 @@ public class MessageHelper {
 
 
     public List<MessageCO> receive(String fromId, String toId) throws IsNotPairException {
-        boolean isPair = isPair(fromId, toId);
-        if (!isPair)
+        boolean isPair = sessionHelper.isPair(fromId, toId);
+        if (!isPair) {
+            LOG.info("is not pair. sessionId=" + fromId + " toSessionId=" + toId);
             throw new IsNotPairException("fromId = " + fromId + " toId = " + toId);
-        return tryToReceiveMessages(fromId, toId);
+        }
+        List<MessageCO> msgList = tryToReceiveMessages(fromId, toId);
+        LOG.info("receive message. sessionId=" + fromId + " toSessionId=" + toId);
+        if (LOG.isDebugEnabled()) {
+            for (MessageCO message : msgList) {
+                LOG.debug("receive message. sessionId=" + fromId + " toSessionId=" +
+                        toId + " message=" + message.getContent());
+            }
+        }
+        return msgList;
     }
 
 

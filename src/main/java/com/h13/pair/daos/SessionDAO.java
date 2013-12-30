@@ -6,11 +6,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
- * Created with IntelliJ IDEA.
+ * 用于持久化保存相关的关联数据，用于cache挂掉之后的恢复
+ * 当连接断掉之后也会软删除这个数据
  * User: sunbo
  * Date: 13-11-26
  * Time: 下午4:06
- * To change this template use File | Settings | File Templates.
  */
 @Repository
 public class SessionDAO {

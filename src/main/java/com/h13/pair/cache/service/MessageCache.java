@@ -9,7 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
+ * 发送消息的缓存，存放的是一个list
+ * key:mj:msg:${fromId}_${toId}
+ * value:消息list
  * User: sunbo
  * Date: 13-7-16
  * Time: 下午4:53

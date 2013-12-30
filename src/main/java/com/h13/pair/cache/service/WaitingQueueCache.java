@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
- * 等到队列的存储
+ * 等待队列的存储
+ * key:mj:waiting
+ * value:Set<String> 等待匹配的id
  * User: sunbo
  * Date: 13-7-16
  * Time: 下午4:53
@@ -29,6 +31,15 @@ public class WaitingQueueCache {
 
     public boolean delete(String sessionId) {
         return waitingCOTemplate.opsForSet().remove(KEY, sessionId);
+    }
+
+    /**
+     * 如果存在返回true
+     * @param sessionId
+     * @return
+     */
+    public boolean check(String sessionId) {
+        return waitingCOTemplate.opsForSet().members(KEY).contains(sessionId);
     }
 
 }

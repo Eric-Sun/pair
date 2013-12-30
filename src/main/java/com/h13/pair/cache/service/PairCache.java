@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
- * Created with IntelliJ IDEA.
+ * 判断是否已经匹配上的数据
+ * key:mj:pair:${fromId}_${toId}
+ * value:pairCO
  * User: sunbo
  * Date: 13-11-25
  * Time: 下午4:03

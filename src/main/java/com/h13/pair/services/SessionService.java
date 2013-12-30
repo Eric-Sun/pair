@@ -2,13 +2,14 @@ package com.h13.pair.services;
 
 import com.h13.pair.cache.co.PairCO;
 import com.h13.pair.exceptions.NoSessionForPairException;
+import com.h13.pair.exceptions.SessionNotInWaitingQueueException;
 import com.h13.pair.exceptions.SessionPairedException;
 import com.h13.pair.helpers.SessionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created with IntelliJ IDEA.
+ * session相关操作
  * User: sunbo
  * Date: 13-11-26
  * Time: 下午7:46
@@ -33,4 +34,7 @@ public class SessionService {
         sessionHelper.close(sessionId, toSessionId);
     }
 
+    public void quitWait(String sessionId) throws SessionNotInWaitingQueueException {
+        sessionHelper.quitWait(sessionId);
+    }
 }

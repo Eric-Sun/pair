@@ -3,6 +3,7 @@ package com.h13.pair.controllers;
 import com.h13.pair.cache.co.PairCO;
 import com.h13.pair.config.Constants;
 import com.h13.pair.exceptions.NoSessionForPairException;
+import com.h13.pair.exceptions.SessionNotInWaitingQueueException;
 import com.h13.pair.exceptions.SessionPairedException;
 import com.h13.pair.services.SessionService;
 import com.h13.pair.utils.DTOUtils;
@@ -28,6 +29,13 @@ public class SessionController {
     SessionService sessionService;
 
 
+    /**
+     * 创建一个session，然后尝试匹配session
+     *
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping("/create")
     @ResponseBody
     public String create(HttpServletRequest request, HttpServletResponse response) {
@@ -44,6 +52,13 @@ public class SessionController {
         }
     }
 
+    /**
+     * 尝试匹配
+     *
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping("/pair")
     @ResponseBody
     public String pair(HttpServletRequest request, HttpServletResponse response) {
@@ -61,6 +76,13 @@ public class SessionController {
     }
 
 
+    /**
+     * 断掉匹配，双方离开
+     *
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping("/close")
     @ResponseBody
     public String close(HttpServletRequest request, HttpServletResponse response) {
@@ -73,4 +95,14 @@ public class SessionController {
     }
 
 
+    public String quitWait(HttpServletRequest request, HttpServletResponse response) {
+        String sessionId = null;
+        try {
+            sessionId = request.getParameter("sessionId");
+            sessionService.quitWait(sessionId);
+            return DTOUtils.getSucessResponse(request, response, sessionId, Constants.DEFAULT_TO_SESSION_ID);
+        } catch (SessionNotInWaitingQueueException e) {
+            return DTOUtils.getFailureResponse(request, response, sessionId, Constants.DEFAULT_TO_SESSION_ID, SessionNotInWaitingQueueException.ERROR_CODE);
+        }
+    }
 }

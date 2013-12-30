@@ -29,7 +29,13 @@ public class MessageController {
     MessageService messageService;
 
 
-    @RequestMapping("/send")
+    /**
+     * 发送消息
+     * @param request
+     * @param response
+     * @return
+     */
+        @RequestMapping("/send")
     @ResponseBody
     public String send(HttpServletRequest request, HttpServletResponse response) {
         String sessionId = request.getParameter("sessionId");
@@ -44,6 +50,12 @@ public class MessageController {
     }
 
 
+    /**
+     * 接受消息
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping("/receive")
     @ResponseBody
     public String receive(HttpServletRequest request, HttpServletResponse response) {
